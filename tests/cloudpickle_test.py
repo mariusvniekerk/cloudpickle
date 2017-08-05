@@ -1,7 +1,7 @@
 from __future__ import division
 
 import abc
-
+import collections
 import base64
 import functools
 import imp
@@ -651,6 +651,15 @@ class CloudPickleTest(unittest.TestCase):
         self.assertEqual(len(weakset), 2)
 
         self.assertEqual(set(weakset), set([depickled1, depickled2]))
+
+    def test_namedtuple(self):
+        MyTuple = collections.namedtuple('MyTuple', ['a', 'b', 'c'])
+
+        t = MyTuple(1, 2, 3)
+        depickled_t = pickle_depickle(t)
+
+        self.assertEqual((depickled_t.a, depickled_t.b, depickled_t.c), (1, 2, 3))
+        self.assertEqual(vars(t), vars(depickled_t))
 
 
 if __name__ == '__main__':
